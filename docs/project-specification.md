@@ -127,11 +127,6 @@ The MVP is the smallest version of the application that already solves the main 
 
 ## 10. Project Schedule
 
-![Gantt chart – Tabletop Muster schedule](gantt-chart.png)
-
-<details>
-<summary>Chart source (Mermaid)</summary>
-
 ```mermaid
 %%{init: {
   "theme": "base",
@@ -197,8 +192,6 @@ gantt
     T-11 Testing and presentation  :t11, after t10, 10d
     Project submission             :milestone, crit, end, 2027-01-18, 0d
 ```
-
-</details>
 
 How to read the chart: blue bars are regular tasks, orange bars are the tasks the MVP depends on, and red diamonds mark the key moments of the project: MVP ready and final submission.
 

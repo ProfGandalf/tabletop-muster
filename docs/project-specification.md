@@ -116,6 +116,7 @@ The MVP is the smallest version of the application that already solves the main 
 | Database | SQLite + Entity Framework Core | Single-file database, accessed through C# classes instead of raw SQL |
 | Authentication | ASP.NET Core Identity | Built-in registration, login and password hashing |
 | Project management | GitHub (Issues, Projects, Milestones, Pull Requests) | All project management in one place |
+| Hosting | Personal Linux Server (Cloudflare, Nginx) |
 
 ## 9. Data Model
 

@@ -1,4 +1,4 @@
-# Tabletop Muster — harmonogram produkcji
+# Tabletop Muster — Project Schedule
 
 ```mermaid
 %%{init: {
@@ -36,42 +36,42 @@
   }
 }}%%
 gantt
-    title Tabletop Muster - harmonogram (semestr zimowy 2026/2027)
+    title Tabletop Muster - schedule (winter semester 2026/2027)
     dateFormat YYYY-MM-DD
-    axisFormat %d.%m
+    axisFormat %b %d
     tickInterval 1week
     todayMarker off
 
-    section 1. Przygotowanie
-    T-01 Projekt i README          :t01, 2026-10-20, 7d
-    T-02 Baza danych i seed        :t02, after t01, 7d
+    section 1. Setup
+    T-01 Project and README        :t01, 2026-10-20, 7d
+    T-02 Database and seed         :t02, after t01, 7d
 
-    section 2. Konta i katalog
-    T-03 Logowanie i rejestracja   :t03, after t02, 10d
-    T-04 Katalog jednostek         :t04, after t03, 11d
+    section 2. Accounts and catalog
+    T-03 Login and registration    :t03, after t02, 10d
+    T-04 Unit catalog              :t04, after t03, 11d
 
-    section 3. Rozpiski (MVP)
-    T-05 Tworzenie rozpisek        :active, t05, after t04, 7d
-    T-06 Jednostki w rozpisce      :active, t06, after t05, 7d
-    T-07 Punkty i limit            :active, t07, after t06, 7d
-    T-08 Własne jednostki          :active, t08, after t07, 6d
-    MVP gotowe                     :milestone, crit, mvp, 2026-12-21, 0d
+    section 3. Army lists (MVP)
+    T-05 Creating army lists       :active, t05, after t04, 7d
+    T-06 Units in army list        :active, t06, after t05, 7d
+    T-07 Points and limit          :active, t07, after t06, 7d
+    T-08 Custom units              :active, t08, after t07, 6d
+    MVP ready                      :milestone, crit, mvp, 2026-12-21, 0d
 
-    section 4. Rozszerzenia
-    T-09 Liczba modeli w oddziale  :t09, 2026-12-22, 9d
-    T-10 Kopiowanie i druk         :t10, after t09, 8d
+    section 4. Extensions
+    T-09 Squad size                :t09, 2026-12-22, 9d
+    T-10 Copy and print            :t10, after t09, 8d
 
-    section 5. Finalizacja
-    T-11 Testy i prezentacja       :t11, after t10, 10d
-    Oddanie projektu               :milestone, crit, end, 2027-01-18, 0d
+    section 5. Finalization
+    T-11 Testing and presentation  :t11, after t10, 10d
+    Project submission             :milestone, crit, end, 2027-01-18, 0d
 ```
 
-Jak czytać wykres: niebieskie paski to zwykłe zadania, pomarańczowe to te, bez których nie ma MVP, a czerwone romby oznaczają najważniejsze momenty projektu, czyli gotowe MVP i oddanie.
+How to read the chart: blue bars are regular tasks, orange bars are the tasks the MVP depends on, and red diamonds mark the key moments of the project: MVP ready and final submission.
 
-| Etap | Okres | Zadania | Kamień milowy |
+| Stage | Period | Tasks | Milestone |
 |---|---|---|---|
-| 1. Przygotowanie | 20.10 – 02.11.2026 | T-01 – T-02 | Projekt uruchamia się lokalnie |
-| 2. Konta i katalog | 03.11 – 23.11.2026 | T-03 – T-04 | Logowanie i katalog jednostek |
-| 3. Rozpiski (MVP) | 24.11 – 21.12.2026 | T-05 – T-08 | **MVP gotowe (21.12.2026)** |
-| 4. Rozszerzenia | 22.12.2026 – 07.01.2027 | T-09 – T-10 | Pełna wersja |
-| 5. Finalizacja | 08.01 – 17.01.2027 | T-11 | **Oddanie projektu (18.01.2027)** |
+| 1. Setup | Oct 20 – Nov 2, 2026 | T-01 – T-02 | Project runs locally |
+| 2. Accounts and catalog | Nov 3 – Nov 23, 2026 | T-03 – T-04 | Login and unit catalog |
+| 3. Army lists (MVP) | Nov 24 – Dec 21, 2026 | T-05 – T-08 | **MVP ready (Dec 21, 2026)** |
+| 4. Extensions | Dec 22, 2026 – Jan 7, 2027 | T-09 – T-10 | Full version |
+| 5. Finalization | Jan 8 – Jan 17, 2027 | T-11 | **Project submission (Jan 18, 2027)** |

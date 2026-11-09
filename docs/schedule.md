@@ -41,7 +41,6 @@ gantt
     dateFormat YYYY-MM-DD
     axisFormat %b %d
     tickInterval 1week
-    todayMarker off
 
     section 1. Setup
     T-01 Project and README        :t01, 2026-10-20, 7d

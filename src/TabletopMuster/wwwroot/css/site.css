@@ -1,3 +1,9 @@
+:root {
+    --bg-dark: #2b3040;
+    --bg-darker: #161923;
+    --text: #ffffff;
+}
+
 html {
   font-size: 14px;
 }
@@ -18,7 +24,9 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: var(--bg-dark);
+    color: var(--text);
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -28,4 +36,27 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+.navbar,
+.footer {
+    background-color: var(--bg-darker);
+    color: var(--text);
+}
+
+    .navbar .navbar-brand,
+    .navbar .nav-link,
+    .footer,
+    .footer a {
+        color: var(--text);
+    }
+
+        .navbar .nav-link:hover,
+        .footer a:hover {
+            color: #adb5bd;
+        }
+
+.border-top,
+.border-bottom {
+    border-color: #2b3040 !important;
 }

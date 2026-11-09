@@ -2,6 +2,8 @@
     --bg-dark: #2b3040;
     --bg-darker: #161923;
     --text: #ffffff;
+    --accent: #d4a017;
+    --accent-hover: #e8b830;
 }
 
 html {
@@ -25,7 +27,7 @@ html {
 
 body {
     margin-bottom: 60px;
-    background-color: var(--bg-dark);
+    background-color: var(--bg-darker);
     color: var(--text);
 }
 
@@ -59,4 +61,12 @@ body {
 .border-top,
 .border-bottom {
     border-color: #2b3040 !important;
+}
+
+a {
+    color: var(--accent);
+}
+
+a:hover {
+    color: var(--accent-hover);
 }

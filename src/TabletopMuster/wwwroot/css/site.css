@@ -70,3 +70,102 @@ a {
 a:hover {
     color: var(--accent-hover);
 }
+
+/* ---------- Auth pages (Account/Login, Account/Register) ---------- */
+
+.auth-card {
+    width: min(420px, calc(100vw - 32px));
+    padding: 2.5rem 2rem 2rem;
+    background-color: var(--bg-dark);
+    border: 1px solid rgba(212, 160, 23, 0.25);
+    border-top: 4px solid var(--accent);
+    border-radius: 0.75rem;
+    box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 400px) {
+    .auth-card {
+        padding: 2rem 1.25rem 1.5rem;
+    }
+}
+
+.auth-brand {
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.auth-title {
+    margin-bottom: 0.25rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.auth-subtitle,
+.auth-switch,
+.auth-hint {
+    color: #adb5bd;
+}
+
+.auth-subtitle {
+    margin-bottom: 0;
+    font-size: 0.95rem;
+}
+
+.auth-card .form-control {
+    background-color: var(--bg-darker);
+    border-color: #3d4458;
+    color: var(--text);
+}
+
+.auth-card .form-control:focus,
+.auth-card .form-check-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0.2rem rgba(212, 160, 23, 0.3);
+}
+
+.auth-card .form-floating > label {
+    color: #adb5bd;
+}
+
+/* The floating label already names the field; hide the placeholder the template shows at the right edge. */
+.auth-card .form-floating > .form-control::placeholder {
+    color: transparent;
+}
+
+.auth-card .form-check-input:checked {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* Hide the error box until the server actually adds an error. */
+.auth-summary.validation-summary-valid {
+    display: none;
+}
+
+.auth-summary ul {
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+.btn-accent {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg-darker);
+    font-weight: 600;
+}
+
+.btn-accent:hover,
+.btn-accent:focus-visible {
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+    color: var(--bg-darker);
+}
+
+.btn-accent:focus-visible {
+    box-shadow: 0 0 0 0.2rem rgba(212, 160, 23, 0.4);
+}

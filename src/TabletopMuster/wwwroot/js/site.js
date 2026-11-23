@@ -1,4 +1,8 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+// Shared scripts for every page.
 
-// Write your JavaScript code.
+// <select data-autosubmit> submits its form as soon as the value changes (e.g. the game system picker).
+document.addEventListener('change', e => {
+    if (e.target.matches('select[data-autosubmit]')) {
+        e.target.form?.submit();
+    }
+});

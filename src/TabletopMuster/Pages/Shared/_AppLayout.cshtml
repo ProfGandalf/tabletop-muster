@@ -1,0 +1,89 @@
+@{
+    // Layout for the logged-in part of the app. Login/Register keep the centered _Layout.
+    var scoped = ViewContext.ViewData.Model as TabletopMuster.Pages.SystemScopedPageModel;
+    var userName = User.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(User.Identity.Name)
+        ? User.Identity.Name
+        : "Commander";
+}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark" class="app-html">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TabletopMuster</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/TabletopMuster.styles.css" asp-append-version="true" />
+</head>
+<body class="app-body">
+    <a class="visually-hidden-focusable skip-link" href="#main">Skip to content</a>
+
+    <header>
+        <nav class="navbar navbar-expand-lg app-navbar" aria-label="Main">
+            <div class="container-xl">
+                <a class="navbar-brand app-brand" asp-page="/Home" asp-route-system="@scoped?.SystemId">Tabletop Muster</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#appNav"
+                        aria-controls="appNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="appNav">
+                    @if (scoped is not null)
+                    {
+                        @if (scoped.AllowSystemSwitch)
+                        {
+                            <form method="get" asp-page="/Home" class="system-picker">
+                                <label for="system-select" class="visually-hidden">Game system</label>
+                                <select id="system-select" name="system" class="form-select form-select-sm" data-autosubmit>
+                                    @foreach (var s in scoped.Systems)
+                                    {
+                                        <option value="@s.Id" selected="@(s.Id == scoped.SelectedSystem.Id)">@s.Name</option>
+                                    }
+                                </select>
+                                <noscript><button type="submit" class="btn btn-sm btn-outline-light">Go</button></noscript>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="system-picker system-label" title="Game system">@scoped.SelectedSystem.Name</span>
+                        }
+                    }
+
+                    <div class="dropdown ms-lg-auto user-menu">
+                        <button class="btn user-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="avatar" aria-hidden="true">@userName[0]</span>
+                            <span>@userName</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <form method="post" asp-page="/Account/Logout">
+                                    <button type="submit" class="dropdown-item">Log out</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main" class="container-xl app-main">
+        @if (TempData["StatusMessage"] is string status)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="status">
+                @status
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

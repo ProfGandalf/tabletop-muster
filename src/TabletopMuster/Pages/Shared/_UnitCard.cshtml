@@ -1,0 +1,57 @@
+@model UnitCardVm
+@{
+    // One unit, in two looks:
+    //   Picker = false: catalogue card (opens the details popup)
+    //   Picker = true:  compact row with an "Add" button (army list editor)
+    var u = Model.Unit;
+    var initials = string.Concat(u.Name.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+        .Take(2).Select(w => char.ToUpperInvariant(w[0])));
+}
+@if (!Model.Picker)
+{
+    <article class="unit-card" data-item data-unit-id="@u.Id" data-name="@u.Name.ToLowerInvariant()"
+             data-faction="@u.FactionId" data-category="@u.Category"
+             data-source="@(u.IsCustom ? "custom" : "official")" data-points="@u.Points">
+        <div class="unit-art">
+            @if (u.ImageUrl is not null)
+            {
+                <img src="@u.ImageUrl" alt="" loading="lazy" />
+            }
+            else
+            {
+                <span class="unit-initials" aria-hidden="true">@initials</span>
+            }
+            <span class="points-badge">@u.Points pts</span>
+        </div>
+        <div class="unit-card-body">
+            <h3 class="unit-card-title">
+                <button type="button" class="unit-open stretched-link" data-unit-open="@u.Id">@u.Name</button>
+            </h3>
+            <p class="unit-card-meta">
+                <span>@u.FactionName</span>
+                @if (u.IsCustom)
+                {
+                    <span class="badge tag-custom">Custom</span>
+                }
+            </p>
+        </div>
+    </article>
+}
+else
+{
+    <div class="unit-row" data-item data-unit-id="@u.Id" data-name="@u.Name.ToLowerInvariant()"
+         data-faction="@u.FactionId" data-category="@u.Category" data-points="@u.Points">
+        <span class="unit-initials sm" aria-hidden="true">@initials</span>
+        <div class="unit-row-text">
+            <div class="unit-row-name">
+                @u.Name
+                @if (u.IsCustom)
+                {
+                    <span class="badge tag-custom">Custom</span>
+                }
+            </div>
+            <div class="unit-row-meta">@u.Category · @u.Points pts</div>
+        </div>
+        <button type="button" class="btn btn-sm btn-accent" data-add-unit="@u.Id" aria-label="Add @u.Name">Add</button>
+    </div>
+}

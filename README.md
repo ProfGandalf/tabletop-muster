@@ -13,7 +13,7 @@ Project developed for the course **Zespołowe Tworzenie Projektów IT** (Team IT
 
 ## Tech Stack
 
-C# (.NET 8), ASP.NET Core Razor Pages, Entity Framework Core, SQLite, ASP.NET Core Identity, Bootstrap
+C# (.NET 10), ASP.NET Core Razor Pages, Entity Framework Core, SQLite, ASP.NET Core Identity, Bootstrap
 
 ## Running the app
 

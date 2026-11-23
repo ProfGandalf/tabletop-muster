@@ -1,0 +1,57 @@
+@page
+@model TabletopMuster.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Create account";
+}
+
+<div class="auth-card" data-bs-theme="dark">
+    <div class="text-center mb-4">
+        <a class="auth-brand" asp-page="/Index">Tabletop Muster</a>
+        <h1 class="auth-title">Create account</h1>
+        <p class="auth-subtitle">Save your army lists and build your own units.</p>
+    </div>
+
+    <form method="post" novalidate>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 auth-summary" role="alert"></div>
+
+        <input type="hidden" asp-for="ReturnUrl" />
+
+        <div class="form-floating mb-3">
+            <input asp-for="Input.UserName" class="form-control" autocomplete="nickname" placeholder="username" autofocus />
+            <label asp-for="Input.UserName"></label>
+            <span asp-validation-for="Input.UserName" class="text-danger small"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="Input.Email" class="form-control" autocomplete="email" placeholder="name@example.com" />
+            <label asp-for="Input.Email"></label>
+            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+        </div>
+
+        <div class="form-floating mb-1">
+            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" placeholder="password" aria-describedby="password-hint" />
+            <label asp-for="Input.Password"></label>
+        </div>
+        <div id="password-hint" class="form-text auth-hint mb-3">
+            At least 6 characters, with an uppercase letter, a lowercase letter, a digit and a symbol.
+            <span asp-validation-for="Input.Password" class="text-danger d-block"></span>
+        </div>
+
+        <div class="form-floating mb-4">
+            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" placeholder="password" />
+            <label asp-for="Input.ConfirmPassword"></label>
+            <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+        </div>
+
+        <button type="submit" class="btn btn-accent w-100 py-2">Create account</button>
+    </form>
+
+    <p class="text-center mt-4 mb-0 auth-switch">
+        Already have an account?
+        <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Log in</a>
+    </p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

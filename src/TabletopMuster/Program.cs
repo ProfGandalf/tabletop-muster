@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TabletopMuster.Data;
 using TabletopMuster.Data.Repositories;
@@ -6,6 +7,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TabletopContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(optons => {
+    optons.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<TabletopContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options => {
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/Login";
+});
 
 builder.Services.AddScoped<IUnitRepository, UnitRepository>();
 
@@ -26,6 +38,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

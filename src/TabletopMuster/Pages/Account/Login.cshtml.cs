@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Identity;
 
 namespace TabletopMuster.Pages.Account;
 
@@ -9,6 +10,14 @@ namespace TabletopMuster.Pages.Account;
 // BACKEND TODO: inject SignInManager<...> and implement OnPostAsync.
 public class LoginModel : PageModel
 {
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
+
+    public LoginModel(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager) {
+        _userManager = userManager;
+        _signInManager = signInManager;
+    }
+
     [BindProperty]
     public InputModel Input { get; set; } = new();
 
@@ -43,12 +52,23 @@ public class LoginModel : PageModel
             return Page();
         }
 
-        // BACKEND TODO: sign the user in, for example:
-        //   var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-        //   if (result.Succeeded) return LocalRedirect(Url.IsLocalUrl(ReturnUrl) ? ReturnUrl : "/");
-        //   ModelState.AddModelError(string.Empty, "Invalid email or password.");
-        // Errors added with an empty key are shown in the box at the top of the form.
-        await Task.CompletedTask;
+        var user = await _userManager.FindByEmailAsync(Input.Email);
+
+        if(user is not null) {
+            var result = await _signInManager.PasswordSignInAsync(
+                user, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+
+            if (result.Succeeded) {
+                return LocalRedirect(Url.IsLocalUrl(ReturnUrl) ? ReturnUrl! : "/");
+            }
+
+            if (result.IsLockedOut) {
+                ModelState.AddModelError(string.Empty, "Too many failed attempts. Try again in a few minutes");
+                return Page();
+            }
+        }
+
+        ModelState.AddModelError(string.Empty, "Invalid email or password");
         return Page();
     }
 }

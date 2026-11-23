@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TabletopMuster.ViewModels;
 
@@ -8,6 +9,8 @@ namespace TabletopMuster.Pages.ArmyLists;
 // The browser keeps the points total up to date; on save the whole list arrives in Input
 // (one Input.Entries item per squad).
 // BACKEND TODO: replace the SampleData calls, save in OnPostAsync, and require login for this page.
+
+[Authorize]
 public class EditModel : SystemScopedPageModel
 {
     [BindProperty(SupportsGet = true)]

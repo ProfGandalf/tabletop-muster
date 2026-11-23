@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using TabletopMuster.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TabletopMuster.Pages;
 
 // FRONTEND STUB: the main page after login (army lists + unit catalogue of the chosen system).
 // The properties below are what Home.cshtml displays.
 // BACKEND TODO: replace the SampleData calls with real queries, and require login for this page.
+[Authorize]
 public class HomeModel : SystemScopedPageModel
 {
     public List<FactionVm> Factions { get; set; } = new();

@@ -1,14 +1,22 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Identity;
+using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Mvc.Formatters.Xml;
 
 namespace TabletopMuster.Pages.Account;
 
-// FRONTEND STUB: the form fields and validation rules below are what Register.cshtml binds to.
-// Keep the property names, or change them together with the view.
-// BACKEND TODO: inject UserManager<...> / SignInManager<...> and implement OnPostAsync.
 public class RegisterModel : PageModel
 {
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
+
+    public RegisterModel(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager) {
+        _userManager = userManager;
+        _signInManager = signInManager;
+    }
+
     [BindProperty]
     public InputModel Input { get; set; } = new();
 
@@ -53,13 +61,17 @@ public class RegisterModel : PageModel
             return Page();
         }
 
-        // BACKEND TODO: create the user and sign them in, for example:
-        //   var user = new IdentityUser { UserName = Input.UserName, Email = Input.Email };
-        //   var result = await _userManager.CreateAsync(user, Input.Password);
-        //   if (result.Succeeded) { await _signInManager.SignInAsync(user, isPersistent: false); return LocalRedirect(...); }
-        //   foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
-        // Errors added with an empty key are shown in the box at the top of the form.
-        await Task.CompletedTask;
+        var user = new IdentityUser { UserName = Input.UserName, Email = Input.Email };
+        var result = await _userManager.CreateAsync(user, Input.Password);
+
+        if (result.Succeeded) {
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            return LocalRedirect(Url.IsLocalUrl(ReturnUrl) ? ReturnUrl! : "/");
+        }
+
+        foreach(var error in result.Errors) {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
         return Page();
     }
 }

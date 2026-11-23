@@ -1,0 +1,146 @@
+@page
+@model TabletopMuster.Pages.ArmyLists.EditModel
+@using System.Text.Json
+@{
+    var title = Model.IsNew ? "New army list" : Model.Input.Name;
+    ViewData["Title"] = title;
+    Layout = "_AppLayout";
+
+    var categories = Model.SelectedSystem.Categories
+        .Concat(Model.Units.Select(u => u.Category))
+        .Distinct()
+        .ToList();
+    var pickerUnits = Model.Units
+        .OrderBy(u => categories.IndexOf(u.Category))
+        .ThenBy(u => u.Name)
+        .ToList();
+    var editorJson = JsonSerializer.Serialize(new
+    {
+        categories,
+        units = Model.Units.Select(u => new { u.Id, u.Name, u.Category, u.Points, u.FactionId, u.IsCustom }),
+        entries = Model.Input.Entries.Select(e => e.UnitId),
+    }, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+}
+
+<a class="back-link" asp-page="/Home" asp-route-system="@Model.SystemId" asp-fragment="lists">← Back to army lists</a>
+
+<div class="page-head">
+    <div class="min-w-0">
+        <p class="eyebrow">@Model.SelectedSystem.Name</p>
+        <h1 class="page-title">@title</h1>
+    </div>
+</div>
+
+<form method="post" asp-route-id="@Model.Id" asp-route-system="@Model.SystemId" id="army-form" class="editor-form" novalidate>
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger auth-summary" role="alert"></div>
+    <noscript><div class="alert alert-warning">The army list editor needs JavaScript to add units and count points.</div></noscript>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <section class="panel" aria-labelledby="details-title">
+                <h2 class="panel-title" id="details-title">List details</h2>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input asp-for="Input.Name" class="form-control" placeholder="List name" autocomplete="off" />
+                            <label asp-for="Input.Name"></label>
+                        </div>
+                        <span asp-validation-for="Input.Name" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <select asp-for="Input.FactionId" class="form-select" data-faction-select
+                                    asp-items="@(new SelectList(Model.Factions, "Id", "Name"))">
+                                <option value="">Choose a faction</option>
+                            </select>
+                            <label asp-for="Input.FactionId"></label>
+                        </div>
+                        <span asp-validation-for="Input.FactionId" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input asp-for="Input.PointsLimit" class="form-control" type="number" min="1" max="100000" step="50" placeholder="2000" data-limit-input />
+                            <label asp-for="Input.PointsLimit"></label>
+                        </div>
+                        <span asp-validation-for="Input.PointsLimit" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-center">
+                        <div class="limit-presets" role="group" aria-label="Common points limits">
+                            @foreach (var preset in new[] { 500, 1000, 1500, 2000 })
+                            {
+                                <button type="button" class="chip" data-set-limit="@preset">@preset</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel mt-4" aria-labelledby="entries-title">
+                <div class="d-flex justify-content-between align-items-baseline gap-2">
+                    <h2 class="panel-title" id="entries-title">Units in this list</h2>
+                    <span class="text-muted-app small" data-entry-count>0 units</span>
+                </div>
+                <div data-entries></div>
+                <p class="empty-hint" data-entries-empty>No units yet. Choose a faction, then add units from the list.</p>
+            </section>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="sticky-col">
+                <section class="panel points-panel" aria-labelledby="points-title" data-points-panel>
+                    <h2 class="panel-title" id="points-title">Points</h2>
+                    <p class="points-big"><span data-total>0</span> <span class="points-of">/ <span data-limit>@Model.Input.PointsLimit</span></span></p>
+                    <div class="progress" role="progressbar" aria-label="Points used" aria-valuemin="0" aria-valuemax="100" data-points-progress>
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                    <p class="points-status" aria-live="polite" data-points-status></p>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-accent">@(Model.IsNew ? "Create army list" : "Save changes")</button>
+                        <a class="btn btn-outline-light" asp-page="/Home" asp-route-system="@Model.SystemId" asp-fragment="lists">Cancel</a>
+                    </div>
+                </section>
+
+                <section class="panel mt-4" aria-labelledby="picker-title">
+                    <h2 class="panel-title" id="picker-title">Add units</h2>
+                    <div class="picker-filters">
+                        <input type="search" class="form-control form-control-sm" placeholder="Search units" aria-label="Search units" data-picker-search />
+                        <select class="form-select form-select-sm" aria-label="Category" data-picker-category>
+                            <option value="">All categories</option>
+                            @foreach (var c in categories)
+                            {
+                                <option value="@c">@c</option>
+                            }
+                        </select>
+                    </div>
+                    <p class="empty-hint" data-picker-hint>Choose a faction to see its units.</p>
+                    <p class="empty-hint d-none" data-picker-empty>No units match.</p>
+                    <div class="unit-picker">
+                        @foreach (var u in pickerUnits)
+                        {
+                            <partial name="_UnitCard" model="new UnitCardVm(u, true)" />
+                        }
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    @* Phones: keep the total and the save button in view. *@
+    <div class="mobile-points-bar d-lg-none" data-points-panel>
+        <div>
+            <div class="small text-muted-app">Points</div>
+            <div class="fw-bold"><span data-total>0</span> / <span data-limit>@Model.Input.PointsLimit</span></div>
+        </div>
+        <button type="submit" class="btn btn-accent">@(Model.IsNew ? "Create" : "Save")</button>
+    </div>
+
+    @* army-list-editor.js writes one hidden Input.Entries[i].UnitId field per squad here on submit. *@
+    <div data-hidden-entries></div>
+</form>
+
+<script type="application/json" id="editor-data">@Html.Raw(editorJson)</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/army-list-editor.js" asp-append-version="true"></script>
+}

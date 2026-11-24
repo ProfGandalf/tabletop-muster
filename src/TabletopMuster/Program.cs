@@ -8,8 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<TabletopContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(optons => {
-    optons.User.RequireUniqueEmail = true;
+builder.Services.AddIdentity<IdentityUser, IdentityRole>( options => {
+    options.User.RequireUniqueEmail = true;
 })
 .AddEntityFrameworkStores<TabletopContext>()
 .AddDefaultTokenProviders();

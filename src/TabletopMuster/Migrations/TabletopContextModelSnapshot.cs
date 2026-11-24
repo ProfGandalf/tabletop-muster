@@ -209,19 +209,129 @@ namespace TabletopMuster.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TabletopMuster.Models.ArmyList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("FactionId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsImported")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PointsLimit")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FactionId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("ArmyLists");
+                });
+
+            modelBuilder.Entity("TabletopMuster.Models.ArmyListEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ArmyListId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UnitId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArmyListId");
+
+                    b.HasIndex("UnitId");
+
+                    b.ToTable("ArmyListEntries");
+                });
+
+            modelBuilder.Entity("TabletopMuster.Models.Faction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("GameSystemId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameSystemId");
+
+                    b.ToTable("Factions");
+                });
+
+            modelBuilder.Entity("TabletopMuster.Models.GameSystem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CategoriesJson")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Genre")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StatDefinitionsJson")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GameSystems");
+                });
+
             modelBuilder.Entity("TabletopMuster.Models.Unit", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Category")
+                    b.Property<string>("AuthorId")
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("FactionId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<byte[]>("Image")
                         .HasColumnType("BLOB");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Points")
@@ -230,7 +340,14 @@ namespace TabletopMuster.Migrations
                     b.Property<string>("Rules")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("StatsJson")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("FactionId");
 
                     b.ToTable("Units");
                 });
@@ -284,6 +401,87 @@ namespace TabletopMuster.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TabletopMuster.Models.ArmyList", b =>
+                {
+                    b.HasOne("TabletopMuster.Models.Faction", "Faction")
+                        .WithMany()
+                        .HasForeignKey("FactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Faction");
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("TabletopMuster.Models.ArmyListEntry", b =>
+                {
+                    b.HasOne("TabletopMuster.Models.ArmyList", "ArmyList")
+                        .WithMany("Entries")
+                        .HasForeignKey("ArmyListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TabletopMuster.Models.Unit", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ArmyList");
+
+                    b.Navigation("Unit");
+                });
+
+            modelBuilder.Entity("TabletopMuster.Models.Faction", b =>
+                {
+                    b.HasOne("TabletopMuster.Models.GameSystem", "GameSystem")
+                        .WithMany("Factions")
+                        .HasForeignKey("GameSystemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GameSystem");
+                });
+
+            modelBuilder.Entity("TabletopMuster.Models.Unit", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("TabletopMuster.Models.Faction", "Faction")
+                        .WithMany("Units")
+                        .HasForeignKey("FactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Faction");
+                });
+
+            modelBuilder.Entity("TabletopMuster.Models.ArmyList", b =>
+                {
+                    b.Navigation("Entries");
+                });
+
+            modelBuilder.Entity("TabletopMuster.Models.Faction", b =>
+                {
+                    b.Navigation("Units");
+                });
+
+            modelBuilder.Entity("TabletopMuster.Models.GameSystem", b =>
+                {
+                    b.Navigation("Factions");
                 });
 #pragma warning restore 612, 618
         }

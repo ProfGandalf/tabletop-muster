@@ -56,7 +56,8 @@
                             <span class="avatar" aria-hidden="true">@userName[0]</span>
                             <span>@userName</span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
+                        @* lg-end: right-aligned next to the button on wide screens; under the button when the navbar is collapsed. *@
+                        <ul class="dropdown-menu dropdown-menu-lg-end">
                             <li>
                                 <form method="post" asp-page="/Account/Logout">
                                     <button type="submit" class="dropdown-item">Log out</button>
